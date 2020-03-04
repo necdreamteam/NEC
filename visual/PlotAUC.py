@@ -17,13 +17,6 @@ def plotPrecRec(precRec, result_dir='', classifier=''):
 
     '''
 
-#     result_dir = os.path.expanduser(result_dir)
-
-#     if not os.path.exists(result_dir):
-#         os.makedirs(result_dir)
-
-    # Compute Precision-Recall and plot curve
-
     k = len(precRec)
 
     curves = np.zeros((k,1000))
@@ -51,14 +44,12 @@ def plotPrecRec(precRec, result_dir='', classifier=''):
     plt.figure()
     plt.plot(rec_mean, pre_mean, label = u'AUC = %0.3f ± %0.3f ' % (auc_mean, auc_std))
     plt.errorbar(rec_mean[::100], pre_mean[::100], yerr=pre_std[::100], fmt='o', color='black', ecolor='black')
-    #plt.xlim([0.0, 1.0])
-    #plt.ylim([0.0, 1.05])
     plt.legend(loc='lower left')
     plt.xlabel('Recall')
     plt.ylabel('Precision')
+    plt.title(classifier + "Precision vs Recall")
     plt.savefig(os.path.join(result_dir, classifier + '_PrecisionRecall_CV.png'))
     plt.close()
-    #plt.show()
 
 
 def plotROC(ROC, result_dir='', classifier = ''):
@@ -69,13 +60,6 @@ def plotROC(ROC, result_dir='', classifier = ''):
     :param result_dir: The output directory.
 
     '''
-
-#     result_dir = os.path.expanduser(result_dir)
-
-#     if not os.path.exists(result_dir):
-#         os.makedirs(result_dir)
-
-    # Compute ROC and plot curve
 
     k = len(ROC)
 
@@ -102,11 +86,9 @@ def plotROC(ROC, result_dir='', classifier = ''):
     plt.plot(fpr_mean, tpr_mean, label = u'AUC = %0.3f ± %0.3f ' % (auc_mean, auc_std))
 
     plt.errorbar(fpr_mean[::100], tpr_mean[::100], yerr=tpr_std[::100], fmt='o', color='black', ecolor='black')
-    #plt.xlim([0.0, 1.0])
-    #plt.ylim([0.0, 1.05])
     plt.legend(loc='lower right')
     plt.xlabel('False Positive Rate')
     plt.ylabel('True Positive Rate')
+    plt.title(classifier + "ROC")
     plt.savefig(os.path.expanduser(os.path.join(result_dir, classifier + '_ROC_CV.png')), dpi=1000)
     plt.close()
-    #plt.show()
