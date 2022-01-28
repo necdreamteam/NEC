@@ -9,30 +9,25 @@ from sklearn import preprocessing
 import pickle
 
 class DataTable:
-    def __init__(self, csv_path = None, k_fold = 5, testSet = False, testSetSize = 0.20, keep_split_data = False, split_data="split.pkl"):
-        # import that data 
-        if csv_path:
-            self.csv_path = csv_path
-        else:
-            self.csv_path = "../reducedFeatureDataSet.csv"
-        
+    def __init__(self, **kwargs):
         # get the whole test set
-        self.dataset = self.importDataSet(self.csv_path)
+        self.dataset = self.importDataSet(kwargs['dataset'])
 
-        self.testSetSize = testSetSize
-        
-        # set aside some data for testing. 
-        self.testSetSubjects = None 
-        if testSet:
-            self.testSetSubjects = self.setAsideTestSet(self.dataset, testSetSize)
-        
-        if keep_split_data:
-            self.splitedSubjectes = self.splitData(self.dataset, self.testSetSubjects, k_fold = k_fold)
-            pickle_out = open(split_data,"wb")
+        self.testSetSize = kwargs['testset_size']
+
+        self.k_fold = kwargs['cv_fold']
+
+        self.save_split_path = kwargs['save_split_path']
+                
+        if not kwargs['used_saved_split']:
+            # set aside some data for testing. 
+            self.testSetSubjects = self.setAsideTestSet(self.dataset, self.testSetSize)
+            self.splitedSubjectes = self.splitData(self.dataset, self.testSetSubjects, k_fold = self.k_fold)
+            pickle_out = open(self.save_split_path,"wb")
             pickle.dump(self.splitedSubjectes, pickle_out)
             pickle_out.close()
         else:
-            pickle_in = open(split_data,"rb")
+            pickle_in = open(self.save_split_path,"rb")
             self.splitedSubjectes = pickle.load(pickle_in)
 
 
